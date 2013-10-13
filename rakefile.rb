@@ -21,7 +21,7 @@ task :run => TARGET do
   sh "./#{TARGET}"
 end
 
-SRCS = FileList["main.cpp","c2/*.cpp"]
+SRCS = FileList["main.cpp","c2/*.cpp", "c3/*.cpp"]
 OBJS = SRCS.ext('o')
 
 file TARGET => OBJS do |t|
