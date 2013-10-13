@@ -2,32 +2,34 @@
 #define RetweetCollection_h
 
 #include "Tweet.h"
+#include <set>
 
 class RetweetCollection {
  public:
   RetweetCollection()
-    : empty_(true) {
+    : size_(0) {
   }
 
   bool isEmpty() const {
-    return empty_;
-
+    return 0 == size();
   }
-  
+
   void add(const Tweet& tweet) {
-    empty_ = false;
-  }
-
-  void remove(const Tweet& tweet) {
-    empty_ = true;
+    tweets.insert(tweet);
+    ++size_;
   }
 
   unsigned int size() const {
-    return 0;
+    return tweets.size();
+  }
+
+  void remove(const Tweet& tweet) {
+    --size_;
   }
 
  private:
-  bool empty_;
+  unsigned int size_;
+  std::set<Tweet> tweets;
 };
-
 #endif
+
