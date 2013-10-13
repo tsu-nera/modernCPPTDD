@@ -63,3 +63,4 @@ TEST_F(SoundexEncoding, UppercasesFirstLetter)
   ASSERT_THAT(soundex.encode("abcd"), StartsWith("A"));
 }
 
+
