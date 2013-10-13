@@ -1,4 +1,4 @@
-CPP_COMPILER = "g++"
+CPP_COMPILER = "/opt/centos/devtoolset-1.1/root/usr/bin/g++"
 TARGET="moderncpp.exe"
 GMOCK_HOME="/home/tsu-nera/tools/gmock"
 INC_DIR="-I#{GMOCK_HOME}/include -I#{GMOCK_HOME}/gtest/include"
