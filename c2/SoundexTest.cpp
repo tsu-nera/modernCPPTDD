@@ -9,7 +9,6 @@
 
 using namespace testing;
 
-
 class SoundexEncoding: public testing::Test {
 public:
   Soundex soundex;
@@ -28,5 +27,10 @@ TEST_F(SoundexEncoding, PadsWithZerosToEnsureThreeDigits)
 TEST_F(SoundexEncoding, ReplacesConsonantsWithAppropriateDigits)
 {
   ASSERT_THAT(soundex.encode("Ax"), Eq("A200"));
+}
+
+TEST_F(SoundexEncoding, IgnoresNonAlhabetics)
+{
+  ASSERT_THAT(soundex.encode("A#"), Eq("A000"));
 }
 
