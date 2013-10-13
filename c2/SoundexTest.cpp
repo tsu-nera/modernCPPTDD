@@ -5,8 +5,13 @@
  *      Author: TSUNEMICHI
  */
 #include "gmock/gmock.h"
+#include <string>
 
 class Soundex {
+public:
+  std::string encode(const std::string& word) const {
+    return "";
+  }
 };
 
 TEST(SoundexEncoding, RetainSoleLetterOfOnneLetterWord)
@@ -15,5 +20,4 @@ TEST(SoundexEncoding, RetainSoleLetterOfOnneLetterWord)
 
   auto encoded = soundex.encode("A");
 }
-
 
