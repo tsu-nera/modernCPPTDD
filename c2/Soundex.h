@@ -16,8 +16,7 @@ class Soundex
 public:
   static const size_t MaxCodeLength{4};
   std::string encode(const std::string& word) const {
-    
-    return zeroPad(head(word) + encodedDigits(tail(word)));
+    return zeroPad(UpperFront(head(word)) + encodedDigits(tail(word)));
   }
 
   std::string encodedDigit(char letter) const {
@@ -37,6 +36,11 @@ public:
 private:
   std::string head(const std::string& word) const {
     return word.substr(0, 1);
+  }
+
+  std::string UpperFront(const std::string& string) const {
+    return std::string(1,
+		       std::toupper(static_cast<unsigned char>(string.front())));
   }
 
   std::string tail(const std::string& word) const {
@@ -61,7 +65,6 @@ private:
   bool isComplete (const std::string& encoding ) const {
     return encoding.length() == MaxCodeLength - 1;
   }
-
 
   std::string zeroPad(const std::string& word) const {
     auto zerosNeeded = MaxCodeLength - word.length();
