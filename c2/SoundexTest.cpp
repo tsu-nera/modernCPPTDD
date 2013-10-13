@@ -63,4 +63,16 @@ TEST_F(SoundexEncoding, UppercasesFirstLetter)
   ASSERT_THAT(soundex.encode("abcd"), StartsWith("A"));
 }
 
+TEST_F(SoundexEncoding, IgnoresCaseWhenEncodingConsonants)
+{
+  ASSERT_THAT(soundex.encode("BCDL"), Eq(soundex.encode("Bcdl")));
+}
+
+TEST_F(SoundexEncoding, CombimeDuplicateCodesWhen2ndLetterDuplicates1st)
+{
+  ASSERT_THAT(soundex.encode("Bbcd"), Eq("B230"));
+}
+
+
+
 
