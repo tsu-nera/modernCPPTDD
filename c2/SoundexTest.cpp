@@ -74,5 +74,3 @@ TEST_F(SoundexEncoding, CombimeDuplicateCodesWhen2ndLetterDuplicates1st)
 }
 
 
-
-
