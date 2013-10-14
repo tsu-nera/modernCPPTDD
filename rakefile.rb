@@ -1,13 +1,16 @@
 CPP_COMPILER = "/opt/centos/devtoolset-1.1/root/usr/bin/g++"
 TARGET="moderncpp.exe"
 GMOCK_HOME="/home/tsu-nera/tools/gmock"
-INC_DIR="-I#{GMOCK_HOME}/include -I#{GMOCK_HOME}/gtest/include"
-LIB_DIR="-L#{GMOCK_HOME}/mybuild -L#{GMOCK_HOME}/gtest/mybuild" 
-LIB="-lpthread -lgtest -lgmock"
+CURL_HOME="/home/tsu-nera/tools/curl-7.32.0"
+JSONCPP_HOME="/home/tsu-nera/tools/jsoncpp-src-0.5.0"
+
+INC_DIR="-I#{GMOCK_HOME}/include -I#{GMOCK_HOME}/gtest/include -I#{CURL_HOME}/include -I#{JSONCPP_HOME}/include"
+LIB_DIR="-L#{GMOCK_HOME}/mybuild -L#{GMOCK_HOME}/gtest/mybuild -L#{JSONCPP_HOME}/libs -L#{CURL_HOME}/build/lib"
+LIB="-lpthread -lgtest -lgmock -ljson_linux-gcc -lcurl"
 
 require 'rake/clean'
-CLEAN.include(["src/*.o", "*.exe"])
-#CLOBBER.include("*.exe")
+CLEAN.include(["*/*.o", "*.o","*.exe"])
+CLOBBER.include("*.exe")
 
 desc "Clean and Run"
 task :all => ["clean", "run"]
@@ -21,7 +24,7 @@ task :run => TARGET do
   sh "./#{TARGET}"
 end
 
-SRCS = FileList["main.cpp","c2/*.cpp", "c3/*.cpp"]
+SRCS = FileList["main.cpp","c2/*.cpp", "c3/*.cpp", "c5/*.cpp"]
 OBJS = SRCS.ext('o')
 
 file TARGET => OBJS do |t|
