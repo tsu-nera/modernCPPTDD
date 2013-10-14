@@ -39,10 +39,15 @@ struct FactChunk {
    uint32_t samplesPerChannel;
 };
 
-WavReader::WavReader(const std::string& source, const std::string& dest) 
+WavReader::WavReader(
+      const std::string& source, 
+      const std::string& dest,
+      shared_ptr<WavDescriptor> descriptor) 
    : source_(source)
-   , dest_(dest) {
-   descriptor_ = new WavDescriptor(dest);
+   , dest_(dest)
+   , descriptor_(descriptor) {
+   if (!descriptor_)
+      descriptor_ = make_shared<WavDescriptor>(dest);
 
    channel = DEF_CHANNEL("info/wav", Log_Debug);
    log.subscribeTo((RLogNode*)RLOG_CHANNEL("info/wav"));
@@ -50,8 +55,12 @@ WavReader::WavReader(const std::string& source, const std::string& dest)
 }
 
 WavReader::~WavReader() {
-   delete descriptor_;
+   descriptor_.reset();
    delete channel;
+}
+
+void WavReader::useFileUtil(shared_ptr<FileUtil> fileUtil) {
+   fileUtil_ = fileUtil;
 }
 
 void WavReader::publishSnippets() {
@@ -185,6 +194,7 @@ void WavReader::writeSnippet(
       DataChunk& dataChunk,
       char* data
       ) {
+   // ...
    uint32_t secondsDesired{10};
    if (formatSubchunk.bitsPerSample == 0) formatSubchunk.bitsPerSample = 8;
    uint32_t bytesPerSample{formatSubchunk.bitsPerSample / uint32_t{8}};
@@ -194,10 +204,9 @@ void WavReader::writeSnippet(
 
    samplesToWrite = min(samplesToWrite, totalSamples);
 
-   totalSeconds = totalSamples / formatSubchunk.samplesPerSecond;
+   uint32_t totalSeconds { totalSamples / formatSubchunk.samplesPerSecond };
 
    rLog(channel, "total seconds %u ", totalSeconds);
-   // ...
 
    dataChunk.length = dataLength(
          samplesToWrite, 
@@ -212,8 +221,11 @@ void WavReader::writeSnippet(
 
    rLog(channel, "completed writing %s", name.c_str());
 
+   auto fileSize = fileUtil_->size(name);
+
    descriptor_->add(dest_, name, 
-         totalSeconds, formatSubchunk.samplesPerSecond, formatSubchunk.channels);
+         totalSeconds, formatSubchunk.samplesPerSecond, formatSubchunk.channels,
+         fileSize);
    
    //out.close(); // ostreams are RAII
 }
