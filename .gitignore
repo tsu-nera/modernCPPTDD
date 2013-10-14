@@ -3,3 +3,9 @@
 *.o
 */*.o
 .settings/
+wav/CMake*
+wav/Makefile
+wav/utest
+wav/*.txt
+wav/SnippetPublisher
+wav/cmake_install.cmake
