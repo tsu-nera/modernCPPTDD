@@ -9,3 +9,8 @@ wav/utest
 wav/*.txt
 wav/SnippetPublisher
 wav/cmake_install.cmake
+wav/rlog/CMakeFiles*
+wav/rlog/Makefile
+wav/rlog/*.txt
+wav/rlog/*.cmake
+wav/rlog/*.a
