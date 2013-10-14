@@ -18,7 +18,11 @@
 					<folderInfo id="cdt.managedbuild.toolchain.gnu.cygwin.base.1743645775.494325972" name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cygwin.base.2029311555" name="cdt.managedbuild.toolchain.gnu.cygwin.base" superClass="cdt.managedbuild.toolchain.gnu.cygwin.base">
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.Cygwin_PE" id="cdt.managedbuild.target.gnu.platform.cygwin.base.1349374081" name="デバッグ・プラットフォーム" osList="win32" superClass="cdt.managedbuild.target.gnu.platform.cygwin.base"/>
-							<builder command="make" id="cdt.managedbuild.target.gnu.builder.cygwin.base.440433849" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make ビルダー" superClass="cdt.managedbuild.target.gnu.builder.cygwin.base"/>
+							<builder command="make" id="cdt.managedbuild.target.gnu.builder.cygwin.base.440433849" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make ビルダー" superClass="cdt.managedbuild.target.gnu.builder.cygwin.base">
+								<outputEntries>
+									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name=""/>
+								</outputEntries>
+							</builder>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.cygwin.base.418427805" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.cygwin.base">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1400855505" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
@@ -29,6 +33,7 @@
 									<listOptionValue builtIn="false" value="&quot;Z:\tools\gmock\gtest\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;Z:\tools\boost_1_54_0&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;Z:\tools\rlog-1.4&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;Z:\tools\cpputest-3.3&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.cygwin.970078109" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input.cygwin"/>
 							</tool>
@@ -53,18 +58,19 @@
 		<project id="modernCPPTDD.null.779139590" name="modernCPPTDD"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="デフォルト">
+			<resource resourceType="PROJECT" workspacePath="/modernCPPTDD"/>
+		</configuration>
+	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.toolchain.gnu.cygwin.base.1743645775;cdt.managedbuild.toolchain.gnu.cygwin.base.1743645775.494325972;cdt.managedbuild.tool.gnu.c.compiler.cygwin.base.1269149411;cdt.managedbuild.tool.gnu.c.compiler.input.cygwin.807188287">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.toolchain.gnu.cygwin.base.1743645775;cdt.managedbuild.toolchain.gnu.cygwin.base.1743645775.494325972;cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.base.619637800;cdt.managedbuild.tool.gnu.cpp.compiler.input.cygwin.970078109">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile"/>
 		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="refreshScope" versionNumber="2">
-		<configuration configurationName="デフォルト">
-			<resource resourceType="PROJECT" workspacePath="/modernCPPTDD"/>
-		</configuration>
-	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>
