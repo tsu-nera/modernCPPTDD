@@ -16,8 +16,8 @@ public:
    void Purchase(
          const string& symbol, 
          unsigned int shareCount,
-         const date& date=APortfolio::ArbitraryDate) {
-      portfolio_.Purchase(symbol, shareCount, date);
+         const date& transactionDate=APortfolio::ArbitraryDate) {
+      portfolio_.Purchase(symbol, shareCount, transactionDate);
    }
 
    void Sell(
@@ -61,7 +61,6 @@ TEST_F(APortfolio, AnswersShareCountForPurchasedSymbol) {
 TEST_F(APortfolio, ThrowsOnPurchaseOfZeroShares) {
    ASSERT_THROW(Purchase(IBM, 0), ShareCountCannotBeZeroException);
 }
-// ...
 
 TEST_F(APortfolio, AnswersShareCountForAppropriateSymbol) {
    Purchase(IBM, 5);
