@@ -1,9 +1,11 @@
 #include "Portfolio.h"
+#include "PurchaseRecord.h"
 
 using namespace std;
 using namespace boost::gregorian;
 
 bool Portfolio::IsEmpty() const { 
+//   return 0 == purchaseRecords_.size(); 
    return 0 == holdings_.size(); 
 }
 
@@ -21,28 +23,45 @@ void Portfolio::Sell(
 void Portfolio::Transact(
       const string& symbol, int shareChange, const date& transactionDate) {
    ThrowIfShareCountIsZero(shareChange);
-   UpdateShareCount(symbol, shareChange);
-   AddPurchaseRecord(shareChange, transactionDate);
+   AddPurchaseRecord(symbol, shareChange, transactionDate);
 }
 
 void Portfolio::ThrowIfShareCountIsZero(int shareChange) const {
    if (0 == shareChange) throw ShareCountCannotBeZeroException();
 }
 
-void Portfolio::UpdateShareCount(const string& symbol, int shareChange) {
-   holdings_[symbol] = ShareCount(symbol) + shareChange;
+void Portfolio::AddPurchaseRecord(
+      const string& symbol, int shareChange, const date& date) {
+   if (!ContainsSymbol(symbol))
+      InitializePurchaseRecords(symbol);
+
+   Add(symbol, {shareChange, date});
 }
 
-void Portfolio::AddPurchaseRecord(int shareChange, const date& date) {
-   purchases_.push_back(PurchaseRecord(shareChange, date));
+void Portfolio::InitializePurchaseRecords(const string& symbol) {
+   purchaseRecords_[symbol] = vector<PurchaseRecord>();
+   holdings_[symbol] = Holding();
+}
+
+void Portfolio::Add(const string& symbol, PurchaseRecord&& record) {
+   purchaseRecords_[symbol].push_back(record);
+   holdings_[symbol].Add(record);
+}
+
+bool Portfolio::ContainsSymbol(const string& symbol) const {
+//   return purchaseRecords_.find(symbol) != purchaseRecords_.end();
+   return holdings_.find(symbol) != holdings_.end();
 }
 
 unsigned int Portfolio::ShareCount(const string& symbol) const {
-   auto it = holdings_.find(symbol);
-   if (it == holdings_.end()) return 0;
-   return it->second;
+//   auto records = Find<vector<PurchaseRecord>>(purchaseRecords_, symbol);
+//   return accumulate(records.begin(), records.end(), 0, 
+//      [] (int total, PurchaseRecord record) { 
+//          return total + record.ShareCount; });
+   return Find<Holding>(holdings_, symbol).ShareCount();
 }
 
 vector<PurchaseRecord> Portfolio::Purchases(const string& symbol) const {
-   return purchases_;
+//   return Find<vector<PurchaseRecord>>(purchaseRecords_, symbol);
+   return Find<Holding>(holdings_, symbol).Purchases();
 }
