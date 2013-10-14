@@ -5,47 +5,67 @@
 using namespace std;
 using namespace testing;
 
-class APlaceDescriptionService: public Test {
-public:
-  static const string ValidLatitude;
-  static const string ValidLongitude;
-};
-
-const string APlaceDescriptionService::ValidLatitude("38.005");
-const string APlaceDescriptionService::ValidLongitude("-104.44");
-
+// Google Mock 生成
 class HttpStub: public Http {
 public:
    MOCK_METHOD0(initialize, void());
    MOCK_CONST_METHOD1(get, string(const string&));
 };
 
-class PlaceDescriptionService_StubHttpService: public PlaceDescriptionService {
+// テストスイート
+class APlaceDescriptionService: public Test {
 public:
-  PlaceDescriptionService_StubHttpService(shared_ptr<HttpStub> httpStub)
-    : httpStub_{httpStub} {}
-  shared_ptr<Http> httpService() const override { return httpStub_; }
-  shared_ptr<Http> httpStub_;
+  static const string ValidLatitude;
+  static const string ValidLongitude;
+
+  shared_ptr<HttpStub> httpStub;
+  shared_ptr<HttpFactory> factory;
+  shared_ptr<PlaceDescriptionService> service;
+
+  virtual void SetUp() override {
+    factory = make_shared<HttpFactory>();
+    service = make_shared<PlaceDescriptionService>(factory);
+  }
+
+  void TearDown() override {
+    factory.reset();
+    httpStub.reset();
+  }
 };
 
-TEST_F(APlaceDescriptionService, MakesHttpRequestToObtainAddress) {
-  InSequence forceExpectationOrder;
-  shared_ptr<HttpStub> httpStub{new HttpStub};
+// テストスイートの継承がデキるのか！これは発見
+class APlaceDescriptionService_WithHttpMock: public APlaceDescriptionService {
+public:
+  void SetUp() override {
+    APlaceDescriptionService::SetUp(); // ここで継承
+    httpStub = make_shared<HttpStub>();
+    factory->setInstance(httpStub);
+  }
+};
+
+TEST_F(APlaceDescriptionService_WithHttpMock, MakesHttpRequestToObtainAddress) {
   string urlStart{
     "http://open.mapquestapi.com/nominatim/v1/reverse?format=json&"};
    auto expectedURL = urlStart + 
      "lat=" + APlaceDescriptionService::ValidLatitude + "&" +
      "lon=" + APlaceDescriptionService::ValidLongitude;
+   EXPECT_CALL(*httpStub, initialize());
+   EXPECT_CALL(*httpStub, get(expectedURL));
 
-  EXPECT_CALL(*httpStub, initialize());
-  EXPECT_CALL(*httpStub, get(expectedURL));
-  PlaceDescriptionService_StubHttpService service{httpStub};
-
-  service.summaryDescription(ValidLatitude, ValidLongitude);
+   service->summaryDescription(ValidLatitude, ValidLongitude);
 }
 
-TEST_F(APlaceDescriptionService, FormatsRetrievedAddressIntoSummaryDescription) {
-  shared_ptr<HttpStub> httpStub{new NiceMock<HttpStub>};
+class APlaceDescriptionService_WithNiceHttpMock: public APlaceDescriptionService {
+public:
+  void SetUp() override {
+    APlaceDescriptionService::SetUp(); // ここで継承
+    httpStub = make_shared<NiceMock<HttpStub>>();
+    factory->setInstance(httpStub);
+  }
+};
+
+TEST_F(APlaceDescriptionService_WithNiceHttpMock,
+       FormatsRetrievedAddressIntoSummaryDescription) {
   EXPECT_CALL(*httpStub, get(_))
     .WillOnce(Return(
          R"({ "address": {
@@ -53,28 +73,12 @@ TEST_F(APlaceDescriptionService, FormatsRetrievedAddressIntoSummaryDescription) 
               "city":"Fountain",
               "state":"CO",
               "country":"US" }})"));
-  PlaceDescriptionService_StubHttpService service{httpStub};
 
-  auto description = service.summaryDescription(ValidLatitude, ValidLongitude);
+  auto description = service->summaryDescription(ValidLatitude, ValidLongitude);
 
+  Mock::VerifyAndClearExpectations(httpStub.get());
   ASSERT_THAT(description, Eq("Drury Ln, Fountain, CO, US"));
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const string APlaceDescriptionService::ValidLatitude("38.005");
+const string APlaceDescriptionService::ValidLongitude("-104.44");
