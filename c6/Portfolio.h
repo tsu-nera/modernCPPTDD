@@ -1,67 +1,53 @@
-#include "Portfolio.h"
+#ifndef Portfolio_h
+#define Portfolio_h
+#include <string>
+#include <exception>
+#include <unordered_map>
+#include <vector>
+#include "boost/date_time/gregorian/gregorian_types.hpp"
 #include "PurchaseRecord.h"
+#include "Holding.h"
 
-using namespace std;
-using namespace boost::gregorian;
+class ShareCountCannotBeZeroException: public std::exception {
+};
 
-bool Portfolio::IsEmpty() const { 
-//   return 0 == purchaseRecords_.size(); 
-   return 0 == holdings_.size(); 
-}
+class InvalidSellException: public std::exception {
+};
 
-void Portfolio::Purchase(
-      const string& symbol, unsigned int shareCount, const date& transactionDate) {
-   Transact(symbol, shareCount, transactionDate);
-}
+class Portfolio {
+ public:
+  bool IsEmpty() const;
+  void Purchase(
+		const std::string& symbol, 
+		unsigned int shareCount,
+		const boost::gregorian::date& transactionDate);
+  void Sell(const std::string& symbol, 
+	    unsigned int shareCount,
+	    const boost::gregorian::date& transactionDate);
+  unsigned int ShareCount(const std::string& symbol) const;
+  std::vector<PurchaseRecord> Purchases(const std::string& symbol) const;
 
-void Portfolio::Sell(
-      const string& symbol, unsigned int shareCount, const date& transactionDate) {
-   if (shareCount > ShareCount(symbol)) throw InvalidSellException();
-   Transact(symbol, -shareCount, transactionDate);
-}
+ private:
+  void Transact(const std::string& symbol, 
+		int shareChange,
+		const boost::gregorian::date&);
+  void UpdateShareCount(const std::string& symbol, int shareChange);
+  void AddPurchaseRecord(
+			 const std::string& symbol, int shareCount, const boost::gregorian::date&);
+  void ThrowIfShareCountIsZero(int shareChange) const;
 
-void Portfolio::Transact(
-      const string& symbol, int shareChange, const date& transactionDate) {
-   ThrowIfShareCountIsZero(shareChange);
-   AddPurchaseRecord(symbol, shareChange, transactionDate);
-}
+  bool ContainsSymbol(const std::string& symbol) const;
+  void InitializePurchaseRecords(const std::string& symbol);
+  void Add(const std::string& symbol, PurchaseRecord&& record);
 
-void Portfolio::ThrowIfShareCountIsZero(int shareChange) const {
-   if (0 == shareChange) throw ShareCountCannotBeZeroException();
-}
+   template<typename T>
+     T Find(std::unordered_map<std::string, T> map, const std::string& key) const {
+     auto it = map.find(key);
+     return it == map.end() ? T{} : it->second;
+   }
 
-void Portfolio::AddPurchaseRecord(
-      const string& symbol, int shareChange, const date& date) {
-   if (!ContainsSymbol(symbol))
-      InitializePurchaseRecords(symbol);
-
-   Add(symbol, {shareChange, date});
-}
-
-void Portfolio::InitializePurchaseRecords(const string& symbol) {
-   purchaseRecords_[symbol] = vector<PurchaseRecord>();
-   holdings_[symbol] = Holding();
-}
-
-void Portfolio::Add(const string& symbol, PurchaseRecord&& record) {
-   purchaseRecords_[symbol].push_back(record);
-   holdings_[symbol].Add(record);
-}
-
-bool Portfolio::ContainsSymbol(const string& symbol) const {
-//   return purchaseRecords_.find(symbol) != purchaseRecords_.end();
-   return holdings_.find(symbol) != holdings_.end();
-}
-
-unsigned int Portfolio::ShareCount(const string& symbol) const {
-//   auto records = Find<vector<PurchaseRecord>>(purchaseRecords_, symbol);
-//   return accumulate(records.begin(), records.end(), 0, 
-//      [] (int total, PurchaseRecord record) { 
-//          return total + record.ShareCount; });
-   return Find<Holding>(holdings_, symbol).ShareCount();
-}
-
-vector<PurchaseRecord> Portfolio::Purchases(const string& symbol) const {
-//   return Find<vector<PurchaseRecord>>(purchaseRecords_, symbol);
-   return Find<Holding>(holdings_, symbol).Purchases();
-}
+   // no longer needed!
+   std::unordered_map<std::string, std::vector<PurchaseRecord>> purchaseRecords_;
+   std::unordered_map<std::string, Holding> holdings_;
+};
+#endif

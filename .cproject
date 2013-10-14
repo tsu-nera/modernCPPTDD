@@ -28,6 +28,7 @@
 									<listOptionValue builtIn="false" value="&quot;Z:\tools\gmock\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;Z:\tools\gmock\gtest\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;Z:\tools\boost_1_54_0&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;Z:\tools\rlog-1.4&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.cygwin.970078109" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input.cygwin"/>
 							</tool>

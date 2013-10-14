@@ -80,6 +80,10 @@ string WavReader::toString(int8_t* bytes, unsigned int size) {
    return string{(char*)bytes, size};
 }
 
+writeSamples(out, data, startingSample, samplesToWrite, bytesPerSample) {
+
+}
+
 void WavReader::open(const std::string& name, bool trace) {
    rLog(channel, "opening %s", name.c_str());
 
@@ -194,6 +198,8 @@ void WavReader::open(const std::string& name, bool trace) {
 
    uint32_t startingSample{
       totalSeconds >= 10 ? 10 * formatSubchunk.samplesPerSecond : 0};
+
+   writeSamples(out, data, startingSample, samplesToWrite, bytesPerSample);
 
    rLog(channel, "writing %u samples", samplesToWrite);
 
