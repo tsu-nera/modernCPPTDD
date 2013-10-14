@@ -3,8 +3,9 @@ TARGET="moderncpp.exe"
 GMOCK_HOME="/home/tsu-nera/tools/gmock"
 CURL_HOME="/home/tsu-nera/tools/curl-7.32.0"
 JSONCPP_HOME="/home/tsu-nera/tools/jsoncpp-src-0.5.0"
+BOOST_ROOT="/home/tsu-nera/tools/boost_1_54_0"
 
-INC_DIR="-I#{GMOCK_HOME}/include -I#{GMOCK_HOME}/gtest/include -I#{CURL_HOME}/include -I#{JSONCPP_HOME}/include"
+INC_DIR="-I#{GMOCK_HOME}/include -I#{GMOCK_HOME}/gtest/include -I#{CURL_HOME}/include -I#{JSONCPP_HOME}/include -I#{BOOST_ROOT}"
 LIB_DIR="-L#{GMOCK_HOME}/mybuild -L#{GMOCK_HOME}/gtest/mybuild -L#{JSONCPP_HOME}/libs -L#{CURL_HOME}/build/lib"
 LIB="-lpthread -lgtest -lgmock -ljson_linux-gcc -lcurl"
 
