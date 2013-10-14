@@ -19,7 +19,6 @@ public:
    unsigned int ShareCount(const std::string& symbol) const;
 
 private:
-   bool isEmpty_;
    unsigned int shareCount_;
 };
 

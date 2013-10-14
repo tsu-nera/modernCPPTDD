@@ -2,17 +2,14 @@
 
 using namespace std;
 
-Portfolio::Portfolio() 
-   : isEmpty_{true} 
-   , shareCount_{0u} {
+Portfolio::Portfolio() : shareCount_{0u} {
 }
 
 bool Portfolio::IsEmpty() const { 
-   return isEmpty_; 
+  return 0 == shareCount_;
 }
 
 void Portfolio::Purchase(const string& symbol, unsigned int shareCount) {
-   isEmpty_ = false;
    shareCount_ = shareCount;
 }
 
