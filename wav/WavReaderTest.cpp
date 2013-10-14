@@ -18,7 +18,7 @@ TEST(WavReader, HasExtension) {
    CHECK(!hasExtension(s, bigger));
 }
 
-TEST_GROUP(WavReader_WriteSamples)
+TEST_GROUP(WavReader_WriteSamples) 
 {
    WavReader reader{"",""};
    ostringstream out;
