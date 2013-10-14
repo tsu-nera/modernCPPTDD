@@ -45,3 +45,30 @@ TEST(WavReader_WriteSamples, WritesMultibyteSampleFromMiddle) {
 
    CHECK_EQUAL("89ABCD", out.str());
 }
+
+TEST(WavReader_WriteSamples, IncorporatesChannelCount) {
+   char data[] { "0123456789ABCDEFG" };
+   uint32_t bytesPerSample { 2 };
+   uint32_t startingSample { 0 };
+   uint32_t samplesToWrite { 2 };
+   uint32_t channels { 2 };
+
+   reader.writeSamples(
+         &out, data, startingSample, samplesToWrite, bytesPerSample, channels);
+
+   CHECK_EQUAL("01234567", out.str());
+}
+
+TEST_GROUP(WavReader_DataLength) {
+   WavReader reader{"",""};
+};
+
+TEST(WavReader_DataLength, IsProductOfChannels_BytesPerSample_and_Samples) {
+   uint32_t bytesPerSample{ 2 };
+   uint32_t samples { 5 };
+   uint32_t channels { 4 };
+
+   uint32_t length { reader.dataLength(bytesPerSample, samples, channels) };
+
+   CHECK_EQUAL(2 * 5 * 4, length);
+}

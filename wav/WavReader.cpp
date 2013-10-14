@@ -81,18 +81,23 @@ string WavReader::toString(int8_t* bytes, unsigned int size) {
 }
 
 void WavReader::writeSamples(ostream* out, char* data,
-    uint32_t startingSample,
-    uint32_t samplesToWrite,
-    uint32_t bytesPerSample) {
-  rLog(channel, "writing %u samples", samplesToWrite);
+      uint32_t startingSample,
+      uint32_t samplesToWrite,
+      uint32_t bytesPerSample,
+      uint32_t channels) {
+   rLog(channel, "writing %i samples", samplesToWrite);
 
-  for (auto sample = startingSample;
-       sample < startingSample + samplesToWrite;
-       sample++) {
-     auto byteOffsetForSample = sample * bytesPerSample;
-     for (uint32_t byte{0}; byte < bytesPerSample; byte++)
-        out->put(data[byteOffsetForSample + byte]);
-  }
+   for (auto sample = startingSample;
+        sample < startingSample + samplesToWrite;
+        sample++) {
+      auto byteOffsetForSample = sample * bytesPerSample * channels;
+      for (uint32_t channel{0}; channel < channels; channel++) {
+         auto byteOffsetForChannel =
+            byteOffsetForSample + (channel * bytesPerSample);
+         for (uint32_t byte{0}; byte < bytesPerSample; byte++)
+            out->put(data[byteOffsetForChannel + byte]);
+      }
+   }
 }
 
 void WavReader::open(const std::string& name, bool trace) {
@@ -204,7 +209,11 @@ void WavReader::open(const std::string& name, bool trace) {
    uint32_t totalSeconds{totalSamples / formatSubchunk.samplesPerSecond};
    rLog(channel, "total seconds %u ", totalSeconds);
 
-   dataChunk.length = samplesToWrite * bytesPerSample;
+   dataChunk.length = dataLength(
+         samplesToWrite,
+         bytesPerSample,
+         formatSubchunk.channels);
+
    out.write(reinterpret_cast<char*>(&dataChunk), sizeof(DataChunk));
 
    uint32_t startingSample{
@@ -218,6 +227,14 @@ void WavReader::open(const std::string& name, bool trace) {
          totalSeconds, formatSubchunk.samplesPerSecond, formatSubchunk.channels);
    
    out.close();
+}
+
+uint32_t WavReader::dataLength(
+      uint32_t samples,
+      uint32_t bytesPerSample,
+      uint32_t channels
+      ) const {
+   return samples * bytesPerSample * channels;
 }
 
 void WavReader::seekToEndOfHeader(ifstream& file, int subchunkSize) {
