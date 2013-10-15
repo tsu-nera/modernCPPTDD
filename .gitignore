@@ -14,3 +14,7 @@ wav/rlog/Makefile
 wav/rlog/*.txt
 wav/rlog/*.cmake
 wav/rlog/*.a
+
+tpp/*
+!tpp/*.cpp
+!tpp/*.h
